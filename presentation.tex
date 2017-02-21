@@ -1,6 +1,7 @@
-%\RequirePackage[l2tabu, orthodox]{nag}%nag complains because beamer titlepage uses a centering environment
-%\WarningFilter{nag}{There is no environment ``centering'' }%this leaves nag complaining about “1 complaints in total”.
+\RequirePackage[l2tabu, orthodox]{nag}
 \RequirePackage{silence}
+\WarningFilter{nag}{There is no environment ``centering'' }%nag complains because beamer titlepage uses a centering environment
+\WarningFilter{nag}{1 complaints in total}
 \WarningFilter{ifpdf}{Someone has redefined \pdfoutput}
 \WarningFilter{fmtcount}{\ordinal already defined use \FCordinal instead}
 \documentclass[english]{beamer}
@@ -9,29 +10,40 @@
 \input{preamble/math_mine}
 \input{preamble/redac}
 \input{preamble/draw}
+\input{preamble/draw-rvs}
 \input{preamble/acronyms}
-\usepackage{calc}
-%\defbeamertemplate*{footline}{default}
-%{}
 
-\title[Eliciting a voting rule]{Eliciting a suitable voting rule via examples}
+%\setbeamertemplate{headline}[singleline]
+%\setbeamertemplate{footline}[authortitle]
+
+\title[Eliciting a Voting Rule]{Eliciting a Suitable Voting Rule via Rank-Vectors}
 \subject{Social choice theory}
 \keywords{preference elicitation, voting rules}
-\author{\emph{Olivier Cailloux} \and Ulle Endriss}
-\institute[ILLC]{Heudiasyc, University of Technology of Compiègne \& ILLC, University of Amsterdam}
-\date{\formatdate{18}{10}{2014}}
+\author[Olivier Cailloux]{\emph{Olivier Cailloux} \and Ulle Endriss}
+\institute[LAMSADE]{LAMSADE, Université Paris-Dauphine \& ILLC, University of Amsterdam}
+\date{\formatdate{21}{2}{2017}}
 
 \begin{document}
 \bibliographystyle{apalike}
 
 \begin{frame}[plain]
 	\tikz[remember picture,overlay]{
-		\node[anchor=south west, inner sep=0] at (current page.south west) {
-			{\includegraphics[width=1cm]{illc_cropped}}
+		\path (current page.south west) node[anchor=south west, inner ysep=0] (lamsade) {
+			\includegraphics[height=1cm]{LAMSADE95.jpg}
+		};
+%		\path (lamsade.south east) ++ (0, 1mm) node[anchor=south west, inner ysep=0] (dauphine) {
+%			\includegraphics[height=9mm]{Dauphine.jpg}
+%		};
+%		\path (dauphine.south east) node[anchor=south west, inner sep=0] (psl) {
+%			\includegraphics[height=1cm]{PSL.png}
+%		};
+		\path (current page.south east) node[anchor=south east, inner sep=0] {
+			\includegraphics[height=1cm]{illc_cropped.pdf}
 		};
 	}
-   \titlepage
+	\titlepage
 \end{frame}
+\addtocounter{framenumber}{-1}
 
 \section{Context}
 \subsection{Our goal}
@@ -168,7 +180,7 @@
 	
 	\begin{itemize}
 		\item Ask \emph{good} (informative, example-based) questions.
-		\item Restrict the class of a-priori acceptable functions to $\allrules' \subset \allrules$.
+		\item Restrict the class of a priori acceptable functions to $\allrules' \subset \allrules$.
 	\end{itemize}
 \end{frame}
 
@@ -185,14 +197,15 @@
 }
 
 \section{Asking good questions}
+\subsection{Rank-profiles}
 \begin{frame}[fragile]
 	\frametitle{A different view of a profile}
 	
 	\begin{itemize}
-		\item We want to ask more informative questions about $f$.
-		\item We look at profiles under a different angle.
-		\item A \emph{rank-vector} maps voters to ranks, $x: N \rightarrow [1, m]$.
-		\item All rank vectors: $\rvspace$.
+		\item We want to ask more informative questions about $f$
+		\item We look at profiles under a different angle
+		\item A \emph{rank-vector} maps voters to ranks, $x: N \rightarrow [1, m]$
+		\item All rank-vectors: $\rvspace$
 	\end{itemize}
 	
 	\begin{center}
@@ -244,8 +257,104 @@
 		\path ($(rank-profile.south west)!.5!(rank-profile.south east)$) ++ (0, -7mm) node {$\rprof_{\prof}$};
 	\end{tikzpicture}
 	\end{center}
+\end{frame}
 
-	To each profile $\prof$ corresponds a \emph{rank-profile} $\rprof_\prof$.
+\begin{frame}
+	\frametitle{Rank-profile function}
+	\begin{itemize}
+		\item Rank-profile $\rprof \in {\left(\rvspace\right)}^\allalts$ maps alternatives to rank-vectors
+		\item To each profile $\prof$ corresponds a \emph{rank-profile} $\rprof_\prof$
+		\item Voting rule $f$ maps $\prof$ to $\alts \subseteq \allalts$
+		\item Rank-profile voting rule $\frp$ maps $\rprof$ to $\alts \subseteq \allalts$
+		\item Rank-profile voting rule $\frp$ corresponds to voting rule $f$ iff $\frp(\rprof_\prof) = f(\prof)$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Rank-profiles correspond to \emph{some} combinations of rank-vectors}
+	\begin{itemize}
+		\item Some sets of rank-vectors do \emph{not} form a rank-profile
+		\item We assume preferences are strict
+		\item Thus, for a given voter: ranks must be all different
+	\end{itemize}
+	Not a rank-profile:\\
+	\begin{tikzpicture}
+		\path node[matrix of math nodes, column sep=3mm, row sep=2mm, nodes={anchor=base}, anchor=north west] (rank-profile) {
+			| (rv1 start) | 1&
+			| (rv1 end) | 1
+			\\
+			| (rv2 start) | 2&
+			| (rv2 end) | 3
+			\\
+			| (rv3 start) | 2&
+			| (rv3 end) | 2
+			\\
+		};
+		\foreach \i/\a in {1/a, 2/b, 3/c} {
+			\path node[rank-vector, fit=(rv\i\space start.north west) (rv\i\space end.south east)] (rv\i) {};
+		}
+	\end{tikzpicture}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Symmetries of rank-profile functions}
+	\begin{itemize}
+		\item A rule is \emph{neutral} iff it treats the alternatives equally:
+		\item after renaming alternatives, $f$ selects the renamed alternatives
+		\item In that case, $\frp$ only requires a \emph{set} of rank-vectors: $\frp(x^1 = \isolatedrankvector{1}{2}, x^2 = \isolatedrankvector{2}{1}) = …$
+	\end{itemize}
+	\begin{itemize}
+		\item A rule satisfies \emph{anonymity} iff it treats the voters equally:
+		\item renaming the voters does not change the winners
+		\item No similar simplification of the input of $\frp$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Condorcet property}
+	\begin{definition}[Condorcet property]
+	\begin{itemize}
+		\item A rank-profile voting rule satisfies Condorcet iff it picks the Condorcet winner if it exists
+		\item $x^1$ beats $x^2$ iff more than half of the positions satisfy $x^1_i < x^2_i$
+		\item $x$ is a Condorcet winner in $\rprof$ iff it beats all other $x' \in \rprof$
+	\end{itemize}
+	\end{definition}
+	\begin{example}[Condorcet with 3 voters, 3 alternatives]
+		\centering
+		\begin{tikzpicture}[baseline=(rv2 start.base)]
+			\path node[rank-profile matrix] (rank-profile) {
+				& 1	& 2	& 3
+				\\
+				a &
+				| (rv1 start) | 1 & 2 &
+				| (rv1 end) | 2
+				\\
+				b &
+				| (rv2 start) | 2 & 3 &
+				| (rv2 end) | 1
+				\\
+				c &
+				| (rv3 start) | 3 & 1 &
+				| (rv3 end) | 3
+				\\
+			};
+			\foreach \i/\a in {1/a, 2/b, 3/c} {
+				\path node[rank-vector, fit=(rv\i\space start.north west) (rv\i\space end.south east)] (rv\i) {};
+			}
+		\end{tikzpicture} $ ⇒ $ ? \pause $a$
+	\end{example}
+\end{frame}
+%Many Condorcet rules are not WOB rules
+
+\begin{frame}
+	\frametitle{Informational view about profiles}
+	\begin{itemize}
+		\item \citet{sen_weights_1977}
+		\item Voter $i$ has evaluation function $W_i: \allalts → \R$
+		\item Social welfare functional: associates $\{W_i\}$ to ranking over $\allalts$
+		\item Subject to invariance requirement
+		\item Example: changing $\{W_i\}$ but respecting order does not change the output
+	\end{itemize}
 \end{frame}
 
 \subsection{Using a weak-order}
@@ -253,20 +362,80 @@
 	\frametitle{Representing the preferences of the committee}
 	
 	\begin{itemize}
-		\item We can now ask for the preference status of, e.g.,\\ \isolatedrankvector{1}{3} versus \isolatedrankvector{2}{2}.
-		\item Series of such questions permit to identify a voting rule.
+		\item We can now ask for the preference status of, e.g.,\\ \isolatedrankvector{1}{3} versus \isolatedrankvector{2}{2}
+		\item Sets of such questions permit to identify a voting rule
+		\item \emph{Assuming} the committee reasons in a specific way
 	\end{itemize}
-	
+	\begin{itemize}
+		\item We assume the committee can answer each such question
+		\item With one of ${>, \sim, <}$
+		\item Meaning: when $x^1 > x^2$, the voting rule must select $x^1$ rather than $x^2$ if both are present {\tiny (and similarly for $x^1 < x^2$)}
+		\item The preference ${\pglobeq} = {>} ∪ {\sim}$ of the committee over rank-vectors is transitive
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Weak-order based rules}
 	\begin{definition}[Weak-order based rules]
 		\begin{itemize}
 			\item $\pglobeq$ a weak-order (transitive, reflexive, connected) over $\rvspace$.
-			\item Having a profile $\prof$, look at the maximal rank-vectors in it according to $\pglobeq$.
-			\item The rule $f_\pglobeq$, at $\prof$, selects those alternatives having maximal rank-vectors in $\prof$.
+			\item The rule $f_\pglobeq$, at $\rprof$, selects those alternatives having maximal rank-vectors in $\rprof$ according to $\pglobeq$.
 		\end{itemize}
-		A rule $f$ is \emph{weak-order based} if there exists $\pglobeq$ st $f = f_\pglobeq$.
+		A rule $f$ is \emph{weak-order based} (WOB) if there exists $\pglobeq$ st $f = f_\pglobeq$.
 	\end{definition}
 \end{frame}
-%TODO include an example with layers of rvs to describe the weak-order, and the profile involving 13 and 22, and show who wins.
+
+\begin{frame}
+	\frametitle{Example of a WOB rule}
+	\begin{example}[A WOB rule]
+		\begin{minipage}{0.45\columnwidth}
+			\centering
+			${\pglobeq} = {}$\fbox{%
+				\begin{tikzpicture}[baseline=(13)]
+\setlength{\GraphsNodeSep}{5mm}
+					\path node[isolated rank-vector, matrix anchor=east, outer sep=0, inner sep=0] (11) {1\&1\\};
+					\path (11.south) ++(-2mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north east] (12) {1\&2\\};
+					\path (11.south) ++(2mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north west] (21) {2\&1\\};
+					\path (12.south -| 11) ++(0, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north, inner sep=0] (22) {2\&2\\};
+					\path (22.south) ++(-2mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north east, inner sep=0] (13) {1\&3\\};
+					\path (22.south) ++(2mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north west, inner sep=0] (31) {3\&1\\};
+					\path (13.south) ++(0, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north, inner sep=0] (23) {2\&3\\};
+					\path (31.south) ++(0, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north, inner sep=0] (32) {3\&2\\};
+					\path (23.south -| 22) ++(0, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north, inner sep=0] (33) {3\&3\\};
+					\path[->, draw] (11) -- (12);
+					\path[->, draw] (11) -- (21);
+					\path[->, draw] (12) -- (22);
+					\path[->, draw] (21) -- (22);
+					\path[->, draw] (22) -- (13);
+					\path[->, draw] (22) -- (31);
+					\path[->, draw] (13) -- (23);
+					\path[->, draw] (13) -- (32);
+					\path[->, draw] (31) -- (23);
+					\path[->, draw] (31) -- (32);
+					\path[->, draw] (23) -- (33);
+					\path[->, draw] (32) -- (33);
+				\end{tikzpicture}%
+			}
+		\end{minipage}%
+		\begin{minipage}{0.55\columnwidth}
+			\centering
+			$\begin{array}{lcl}
+				& \rprof_1	& f_\pglobeq(\rprof_1)\\
+				\cmidrule{2-3}
+				a &\isolatedrankvectorinarray{1}{2} & \mkkOK\\
+				b &\isolatedrankvectorinarray{2}{1} & \mkkOK\\
+				c &\isolatedrankvectorinarray{3}{3} &\\
+			\end{array}$
+			$\begin{array}{lcl}
+				& \rprof_2	& f_\pglobeq(\rprof_2)\\
+				\cmidrule{2-3}
+				a &\isolatedrankvectorinarray{1}{3} & \\
+				b &\isolatedrankvectorinarray{2}{2} & \mkkOK\\
+				c &\isolatedrankvectorinarray{3}{1} &\\
+			\end{array}$
+		\end{minipage}
+	\end{example}
+\end{frame}
 
 \subsection{Using preorders}
 \begin{frame}
@@ -286,21 +455,272 @@
 	\end{definition}
 \end{frame}
 
+\begin{frame}
+	\frametitle{Example of a robust rule}
+	\begin{example}[A robust rule]
+		\begin{minipage}{0.55\columnwidth}
+			\centering
+			${\ppglobeq} = {}$\fbox{%
+				\begin{tikzpicture}[baseline=(current bounding box)]
+\setlength{\GraphsNodeSep}{11mm}
+					\path node[isolated rank-vector, matrix anchor=east, outer sep=0, inner sep=0] (13) {1\&3\\};
+					\path (13.south) ++(0, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north] (41) {4\&1\\};
+					\path (41.south) ++(-8mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north, inner sep=0] (14) {1\&4\\};
+					\path (41.south) ++(8mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north, inner sep=0] (33) {3\&3\\};
+					\path (33.east) ++(4mm, 0) node[isolated rank-vector, matrix anchor=west, inner sep=0] (34) {3\&4\\};
+					\path ($(13 -| 34)!.5!(41 -| 34)$) node[isolated rank-vector, matrix anchor=center, inner sep=0] (22) {2\&2\\};
+					\path[->, draw] (13) -- (41);
+					\path[->, draw] (41) -- (14);
+					\path[->, draw] (41) -- (33);
+					\path[->, draw] (22) -- (34);
+				\end{tikzpicture}%
+			}
+		\end{minipage}%
+		\begin{minipage}{0.45\columnwidth}
+			\centering
+			$\begin{array}{lcl}
+				& \rprof	&F_\ppglobeq(\rprof)\\
+				\cmidrule{2-3}
+				a &\isolatedrankvectorinarray{1}{3} & \mkkOK\\
+				b &\isolatedrankvectorinarray{2}{2} & \mkkOK\\
+				c &\isolatedrankvectorinarray{3}{4} &\\
+				d &\isolatedrankvectorinarray{4}{1} &\\
+			\end{array}$
+		\end{minipage}
+	\end{example}
+\end{frame}
+
 \section{Restrict the class of functions}
 \subsection{WOB rules}
 \begin{frame}
-	\frametitle{The WOB class}
+	\frametitle{Our restriction over possible functions}
 	
-	Not every rule is weak-order based.
 	\begin{itemize}
-		\item Bad news: we are not fully general any more.
-		\item Good news: we have restricted our class of functions. $WOB = \Set{f_\pglobeq, \pglobeq \text{ a weak-order over } \rvspace}$ instead of $\allrules$.
+		\item We assume the committee reasons in some specific way
+		\item Restricts the class of rules
+		\item Bad news: we are not fully general any more
+		\item Good news: we have restricted our class of functions
 	\end{itemize}
-	How does WOB compare to other known classes of rules?
+\end{frame}
+
+\begin{frame}
+	\frametitle{The WOB class}
 	\begin{itemize}
-		\item Every scoring rule (e.g. Borda) is a WOB rule.
-		\item Some WOB rules are not scoring rules. E.g. Bucklin.
-		\item Many Condorcet rules are not WOB rules.
+		\item The committee has a weak-order $\pglobeq$ over rank-vectors “in mind”
+		\item This represents a WOB rule $f_\pglobeq$
+		\item $WOB = \Set{f_\pglobeq, \pglobeq \text{ a weak-order over } \rvspace}$ instead of $\allrules$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{WOB rules are neutral}
+	\begin{itemize}
+		\item If $f$ is WOB, $f$ is neutral
+		\item Because $f_\pglobeq$ selects those alternatives with highest rank-vectors
+		\item Thus, we care only about the set of rank-vectors as input of $f$
+		\item And the rank-vector it selects
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{How to be a WOB rule?}
+	$f$ is a WOB rule iff $f$:
+	\begin{itemize}
+		\item Assigns a score $s(x) \in \R$ to each rank-vector $x \in \rvspace$
+		\item Selects the rank-vectors having highest scores
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Scoring rules are WOB rules}
+	\begin{itemize}
+		\item Every scoring rule (e.g. Borda) is a WOB rule
+		\item $s(x)$ is the sum of the partial-scores $s_r(i)$ of individual components of $x$
+		\item Score of 
+		\begin{tikzpicture}[baseline]
+			\path node[isolated rank-vector] {1\&3\&4\\};
+		\end{tikzpicture}
+		$ = s_r(1) + s_r(3) + s_r(4)$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Indifference to permutation is sufficient for anonymity}
+	\begin{itemize}
+		\item Assume $\pglobeq$ is indifferent to permutations of $x$
+		\item E.g. \isolatedrankvector{1}{3} {\sim} \isolatedrankvector{3}{1}
+		\item It follows that $f_\pglobeq$ satisfies anonymity:
+		\item Permuting the voters permutes all rank-vectors
+		\item $f$ must still select the same (reordered) rank-vectors
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Weak-orders and WOB rules}
+	\begin{itemize}
+		\item Relationship between $\pglobeq$ and $f_\pglobeq$ may be counter-intuitive!
+		\item Is indifference to permutation in $\pglobeq$ required for anonymity of $f_\pglobeq$?
+	\end{itemize}
+	\begin{example}[A weak-order yielding a neutral WOB rule]
+		\centering
+		${\pglobeq} = {}$\fbox{%
+			\begin{tikzpicture}[baseline=(13)]
+\setlength{\GraphsNodeSep}{2mm}
+				\path node[isolated rank-vector, matrix anchor=east, outer sep=0, inner sep=0] (11) {1\&1\\};
+				\path (11.south) ++(-2mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north east] (12) {1\&2\\};
+				\path (11.south) ++(2mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north west] (21) {2\&1\\};
+				\path (12.south -| 11) ++(0, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north, inner sep=0] (22) {2\&2\\};
+				\path (22.south) ++(-2mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north east, inner sep=0] (13) {1\&3\\};
+				\path (22.south) ++(2mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north west, inner sep=0] (31) {3\&1\\};
+				\path (13.south -| 22) ++(0, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north, inner sep=0] (23) {2\&3\\};
+				\path (23.south) ++(2mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north west, inner sep=0] (32) {3\&2\\};
+				\path (23.south) ++(-2mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north east, inner sep=0] (33) {3\&3\\};
+				\path[->, draw] (11) -- (12);
+				\path[->, draw] (11) -- (21);
+				\path[->, draw] (12) -- (22);
+				\path[->, draw] (21) -- (22);
+				\path[->, draw] (22) -- (13);
+				\path[->, draw] (22) -- (31);
+				\path[->, draw] (13) -- (23);
+				\path[->, draw] (31) -- (23);
+				\path[->, draw] (23) -- (33);
+				\path[->, draw] (23) -- (32);
+			\end{tikzpicture}%
+		}
+	\end{example}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Two weak-orders, one WOB rule}
+	\begin{example}[Two “equivalent” weak-orders]
+		\centering
+		${\pglobeq}^1 = {}$\fbox{%
+			\begin{tikzpicture}[baseline=(13)]
+\setlength{\GraphsNodeSep}{2mm}
+				\path node[isolated rank-vector, matrix anchor=east, outer sep=0, inner sep=0] (11) {1\&1\\};
+				\path (11.south) ++(-2mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north east] (12) {1\&2\\};
+				\path (11.south) ++(2mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north west] (21) {2\&1\\};
+				\path (12.south -| 11) ++(0, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north, inner sep=0] (22) {2\&2\\};
+				\path (22.south) ++(-2mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north east, inner sep=0] (13) {1\&3\\};
+				\path (22.south) ++(2mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north west, inner sep=0] (31) {3\&1\\};
+				\path (13.south) ++(0, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north, inner sep=0] (23) {2\&3\\};
+				\path (31.south) ++(0, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north, inner sep=0] (32) {3\&2\\};
+				\path (23.south -| 22) ++(0, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north, inner sep=0] (33) {3\&3\\};
+				\path[->, draw] (11) -- (12);
+				\path[->, draw] (11) -- (21);
+				\path[->, draw] (12) -- (22);
+				\path[->, draw] (21) -- (22);
+				\path[->, draw] (22) -- (13);
+				\path[->, draw] (22) -- (31);
+				\path[->, draw] (13) -- (23);
+				\path[->, draw] (13) -- (32);
+				\path[->, draw] (31) -- (23);
+				\path[->, draw] (31) -- (32);
+				\path[->, draw] (23) -- (33);
+				\path[->, draw] (32) -- (33);
+			\end{tikzpicture}%
+		}
+		\hspace{3em}
+		${\pglobeq}^2 = {}$\fbox{%
+			\begin{tikzpicture}[baseline=(13)]
+\setlength{\GraphsNodeSep}{2mm}
+				\path node[isolated rank-vector, matrix anchor=east, outer sep=0, inner sep=0] (11) {1\&1\\};
+				\path (11.south) ++(-2mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north east] (12) {1\&2\\};
+				\path (11.south) ++(2mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north west] (21) {2\&1\\};
+				\path (12.south -| 11) ++(0, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north, inner sep=0] (22) {2\&2\\};
+				\path (22.south) ++(-2mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north east, inner sep=0] (13) {1\&3\\};
+				\path (22.south) ++(2mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north west, inner sep=0] (31) {3\&1\\};
+				\path (13.south -| 22) ++(0, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north, inner sep=0] (23) {2\&3\\};
+				\path (23.south) ++(2mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north west, inner sep=0] (32) {3\&2\\};
+				\path (23.south) ++(-2mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north east, inner sep=0] (33) {3\&3\\};
+				\path[->, draw] (11) -- (12);
+				\path[->, draw] (11) -- (21);
+				\path[->, draw] (12) -- (22);
+				\path[->, draw] (21) -- (22);
+				\path[->, draw] (22) -- (13);
+				\path[->, draw] (22) -- (31);
+				\path[->, draw] (13) -- (23);
+				\path[->, draw] (31) -- (23);
+				\path[->, draw] (23) -- (33);
+				\path[->, draw] (23) -- (32);
+			\end{tikzpicture}%
+		}
+	\end{example}
+	\begin{equation}
+		f_{\pglobeq^1} = f_{\pglobeq^2}
+	\end{equation}
+\end{frame}
+
+\subsubsection{Bucklin}
+\begin{frame}[fragile]
+	\frametitle{Bucklin}
+	Bucklin: a WOB rule that is not a scoring rule
+	\begin{definition}[Bucklin]
+		\begin{itemize}
+			\item Look at rank $r$ (starting with 1)
+			\item Is there a majority for ranking an alternative at $r$ or better?
+			\item Iterate, stop when found a suitable rank $r$
+			\item Select those alternatives that have most persons ranking them at $r$ or better
+		\end{itemize}
+	\end{definition}
+	\begin{center}
+		\begin{tikzpicture}[baseline=(middle.base)]
+			\path node[profile matrix, outer sep=2em] (profile) {
+				1&2&3&4&5\\
+				a&a&b&b&c\\
+				| (middle) | b&c&c&c&a\\
+				c&b&a&a&b\\
+			};
+		\end{tikzpicture} $⇒$ ? \pause $c$
+	\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Some WOB rules are not scoring rules}
+	\begin{itemize}
+		\item Bucklin is a WOB rule
+		\item Proof idea: let’s build a score $s(x)$ to be \emph{minimized}
+		\item $s(x) = $ rank $m_x$ required plus frac.\ missing for unanimity at $m_x$
+		\item Define $m_x$ as the “median” of $x$ {\tiny lowest nb $n$ st more than half the numbers are ≤ $n$}
+	\end{itemize}
+	\begin{equation}
+		s(x) = m_x + \frac{\# x_i > m_x}{\# x_i}
+	\end{equation}
+	\begin{example}[Bucklin scores]
+		\centering
+		\begin{tikzpicture}
+			\path node[rank-profile matrix, row sep=0mm] (rank-profile) {
+				& 1	& 2	& 3	& 4	& 5 & m_x & s(x)
+				\\
+				a &
+				| (rv1 start) | 1 & 1 & 3 & 3 &
+				| (rv1 end) | 2 &
+				2 & 2 + \frac{2}{5}
+				\\
+				b &
+				| (rv2 start) | 2 & 3 & 1 & 1 &
+				| (rv2 end) | 3 &
+				2 & 2 + \frac{2}{5}
+				\\
+				c &
+				| (rv3 start) | 3 & 2 & 2 & 2 &
+				| (rv3 end) | 1 &
+				2 & 2 + \frac{1}{5}
+				\\
+			};
+			\foreach \i/\a in {1/a, 2/b, 3/c} {
+				\path node[rank-vector, fit=(rv\i\space start.north west) (rv\i\space end.south east)] (rv\i) {};
+			}
+		\end{tikzpicture}
+	\end{example}
+\end{frame}
+
+\begin{frame}
+	\frametitle{WOB compared to other classes of rules}
+	\begin{itemize}
+		\item Every scoring rule is a WOB rule
+		\item Some WOB rules are not scoring rules
+		\item Many Condorcet rules are not WOB rules
 	\end{itemize}
 	\begin{block}{Some relationships between classes of rules}
 		Scoring $\subset$ WOB; Condorcet $\cap$ WOB $= \emptyset$ (for $n = 3k, m ≥ 4$).
@@ -308,10 +728,10 @@
  \end{frame}
 
 \subsection{Robust rules}
-\begin{frame}[fragile]
+\begin{frame}
 	\frametitle{The class of robust rules}
 	
-	Some robust rules are not WOB rules.
+	Some robust rules are not WOB rules
 	\begin{example}[A robust rule]
 		\begin{minipage}{0.45\columnwidth}
 			\centering
@@ -327,7 +747,6 @@
 					\path[->, draw] (13) -- (41);
 					\path[->, draw] (41) -- (14);
 					\path[->, draw] (41) -- (33);
-		%			\path[->, draw] (41) -- (34);
 					\path[->, draw] (22) -- (34);
 				\end{tikzpicture}%
 			}
@@ -337,10 +756,6 @@
 			$\begin{array}{lcl@{\hspace*{5mm}}cl}
 				& \multicolumn{2}{c}{\hspace*{3mm}\prof_1\hspace{3mm}F_\ppglobeq(\prof_1)}	& \multicolumn{2}{c}{\hspace*{2mm}\prof_2\hspace{3mm}F_\ppglobeq(\prof_2)}\\
 				\cmidrule(r{2mm}){2-3}\cmidrule{4-5}
-%		\begin{tikzpicture}[baseline]
-%			\path node[draw, inner ysep=1cm, outer sep=0, anchor=base] (first) {1};
-%			\path (current bounding box.south west) ++(0, -1cm);
-%		\end{tikzpicture}%
 				a &\isolatedrankvectorinarray{1}{3}
  & \mkkOK & \isolatedrankvectorinarray{1}{4} &\\
 				b &\isolatedrankvectorinarray{2}{2} & \mkkOK & \isolatedrankvectorinarray{2}{2} & \mkkOK\\
@@ -349,9 +764,12 @@
 			\end{array}$
 		\end{minipage}
 	\end{example}
-	
+ \end{frame}
+
+\begin{frame}
+	\frametitle{Robust rules compared to other classes of rules}	
 	\begin{block}{Some relationships between classes of rules}
-		Scoring $\subset$ WOB $\subset$ Robust.
+		Scoring $\subset$ WOB $\subset$ Robust
 	\end{block}
 \end{frame}
 
@@ -360,36 +778,36 @@
 	\frametitle{Which questions to ask?}
 	
 	\begin{itemize}
-		\item Assume the committee has a weak-order $\pglobeq$ in mind.
-		\item We want to discover much information using few questions.
-		\item Different questions bring different amount of information.
+		\item Assume the committee has a weak-order $\pglobeq$ in mind
+		\item We want to discover much information using few questions
+		\item Different questions bring different amount of information
 	\end{itemize}
 	\begin{definition}[Elicitation strategy]
-		An elicitation strategy tells us which question should be asked considering our current knowledge.
+		An elicitation strategy tells us which question should be asked considering our current knowledge
 	\end{definition}
 	A strategy:
 	\begin{enumerate}
-		\item computes the fitness of asking about a pair of rank-vectors, for each pair;
-		\item chooses the fittest pair.
+		\item computes the fitness of asking about a pair of rank-vectors, for each pair
+		\item chooses the fittest pair
 	\end{enumerate}
-	We ask $q$ questions, then compare our approximation $F_\ppglobeq$ to $f_\pglobeq$.
+	We ask $q$ questions, then compare our approximation $F_\ppglobeq$ to $f_\pglobeq$
 \end{frame}
 
 \subsection{Comparing strategies}
 \begin{frame}
 	\frametitle{Which strategy?}
 	
-	We tested three strategies.
-	\begin{description}
-		\item[optimistic] fitness of ($x, y$) proportional to the number of rank-vectors dominated by $x$ or $y$, but not both;
-		\item[pessimistic] a variant of the previous strategy, using the min operator rather than the sum;
-		\item[likelihood] fitness proportional to the likelihood of a profile occurring where both rank-vectors are possible winners.% (depends on the probability distribution over profiles, we assumed impartial culture)
+	We tested three strategies
+	\begin{description}[pessimistic]
+		\item[optimistic] fitness of ($x, y$) proportional to the number of rank-vectors dominated by $x$ or $y$, but not both
+		\item[pessimistic] a variant of the previous strategy, using the min operator rather than the sum
+		\item[likelihood] fitness proportional to the likelihood of a profile occurring where both rank-vectors are possible winners {\tiny (depends on the probability distribution over profiles, we assumed impartial culture)}
 	\end{description}
-	We assume pareto-dominance and indifference to permutations.
+	We assume pareto-dominance and indifference to permutations
 	\begin{block}{Comparison of strategies}
 		\begin{itemize}
 			\item Optimistic not better than random!
-			\item Likelihood much better than pessimistic.
+			\item Likelihood much better than pessimistic
 		\end{itemize}
 	\end{block}
 \end{frame}
@@ -400,10 +818,10 @@
 	
 	How many questions must be asked for a useful approximation?
 	\begin{itemize}
-		\item Our approximation has all the true winners: $f_\pglobeq(\prof) \subseteq F_\ppglobeq(\prof)$.
-		\item But it may have supplementary winners.
-		\item We are interested in the ratio of approximated VS true winners: $\frac{\card{F_\ppglobeq(\prof)}}{\card{f_\pglobeq(\prof)}}$.
-		\item We average it over all profiles: $\frac{1}{\card{\profiles}} \sum_{\prof \in \profiles} \frac{\card{F_\ppglobeq(\prof)}}{\card{f_\pglobeq(\prof)}}$.
+		\item Our approximation has all the true winners: $f_\pglobeq(\prof) \subseteq F_\ppglobeq(\prof)$
+		\item But it may have supplementary winners
+		\item We are interested in the ratio of approximated VS true winners: $\frac{\card{F_\ppglobeq(\prof)}}{\card{f_\pglobeq(\prof)}}$
+		\item We average it over all profiles: $\frac{1}{\card{\profiles}} \sum_{\prof \in \profiles} \frac{\card{F_\ppglobeq(\prof)}}{\card{f_\pglobeq(\prof)}}$
 	\end{itemize}
 	
 	For $6$ voters, $6$ alternatives, using the likelihood strategy:
@@ -427,11 +845,23 @@
 	
 	We propose to help a committee choose a voting rule.
 	\begin{itemize}
-		\item We introduce a different look at a profile \citep[see also][]{sen_weights_1977}.
-		\item We use it to ask simple questions to elicit preferences.
-		\item We analyse the class of rules reachable by our questioning process.
-		\item A robust voting rule may be defined to give all possible winners \citep[inspired by][]{dias_aggregation/disaggregation_2002}.
-		\item We compare and analyse several elicitation strategies.
+		\item We introduce a different look at a profile \citep[see also][]{sen_weights_1977}
+		\item We use it to ask simple questions to elicit preferences
+		\item We analyse the class of rules reachable by our questioning process
+		\item A robust voting rule may be defined to give all possible winners \citep[inspired by][]{dias_aggregation/disaggregation_2002}
+		\item We compare and analyse several elicitation strategies
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Future work}
+	\begin{itemize}
+		\item The committee could have a preorder in mind
+		\item Or the stable part of the w-o might be a preorder
+		\item Behavioural interpretation of the constraints given by the committee
+		\item Further analysis of the classes WOB, Robust rules
+		\item Explore approximation with robust rules more generally
+		\item Better elicitation strategies with active learning techniques
 	\end{itemize}
 \end{frame}
 
@@ -441,20 +871,48 @@
 		\huge
 		\textit{Thank you for your attention!}
 	\end{center}
-	\tikz[remember picture,overlay]
-	\node[anchor=south west, inner sep=0] at (current page.south west) {
-		{\includegraphics[width=1cm]{illc_cropped}}
-	};
 \end{frame}
 
 \appendix
 \AtBeginSection{
 }
 
-\begin{frame}%[allowframebreaks]
-	\frametitle{Bibliography}
-	\def\newblock{\hskip .11em plus .33em minus .07em}
+\clearpage\pdfbookmark[2]{\refname}{\refname}
+\begin{frame}[allowframebreaks]
+	\frametitle{\refname}
  	\bibliography{zotero}
 \end{frame}
 
+\section{Aim}
+\begin{frame}
+	\frametitle{More general aim}
+	\begin{itemize}
+		\item Choose a rule: from axioms?
+		\item Difficult to consider the implications of the axioms
+		\item Incompatibilities, paradoxes…
+		\item We want to help a commitee choose a voting rule
+		\item Do not limit to ask which axioms are suitable
+		\item We should use the power of the axiomatic analysis
+		\item But leave the axioms implicit
+	\end{itemize}
+\end{frame}
+
 \end{document}
+
+\clearpage\pdfbookmark{License}{License}
+\begin{frame}[plain]
+	\frametitle{License}
+	This presentation, and the associated \LaTeX{} code, are published under the \href{http://opensource.org/licenses/MIT}{MIT license}. Feel free to reuse (parts of) the presentation, under condition that you cite the author.
+	
+	Credits are to be given to \href{http://www.lamsade.dauphine.fr/~ocailloux/}{Olivier Cailloux}, Université Paris-Dauphine.
+\end{frame}
+\addtocounter{framenumber}{-1} 
+\end{document}
+
+\begin{frame}
+	\frametitle{\subsecname}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+\end{frame}
+

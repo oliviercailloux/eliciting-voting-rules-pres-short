@@ -1,11 +1,9 @@
 \newcommand{\allalts}{\mathcal{A}}
 \newcommand{\alts}{A}
-\newcommand{\linors}{\mathcal{L}(\alts)} % UE: changed
 \newcommand{\allrules}{\mathcal{F}}
 
 %the set of all profiles
 \newcommand{\profiles}{\mathbfcal{R}}
-\newcommand{\prof}{\mathbf{R}}
 %a rank-profile
 \newcommand{\rprof}{\mathbf{x}}
 % \newcommand{\rprof}{\text{\boldmath $x$}
@@ -50,6 +48,42 @@
 
 \newcommand{\Vpr}{V^{\,\prime}}
 
+%Voting and MCDA
+%\newcommand{\allalts}{\mathscr{A}}
+
+%Voting
+%rank-profile voting rule
+\newcommand{\frp}{f_\text{r-p}}
+\newcommand{\feasalts}{F}
+\newcommand{\allvoters}{\mathscr{N}}
+\newcommand{\voters}{N}
+\newcommand{\allsystems}{\mathcal{G}}
+\newcommand{\prof}{\mathbf{R}}
+\newcommand{\allprofs}{\mathbfcal{R}}
+\newcommand{\linors}{\mathcal{L}(\alts)}
+
+\newcommand{\pbasic}[1]{\prof^{#1}_\epsilon}
+\newcommand{\pelem}[1]{\prof^{#1}_e}
+\newcommand{\pcycl}[1]{\prof^{#1}_c}
+\newcommand{\pcycllong}[1]{\prof^{#1}_{cl}}
+\newcommand{\pinv}[1]{\overline{\prof_{#1}}}
+\newcommand{\dmap}{{\xitsfamily δ}}
+%powerset without zero
+\newcommand{\powersetz}[1]{\mathcal{P}_\emptyset(#1)}
+
+%logic atom
+%⟼ (long)
+\DeclareDocumentCommand{\lato}{ O{\prof} O{\alts} }{[#1 \!⟼\! #2]}
+%logic atom in
+%↝, \stackrel{\in}{\mapsto}, ➲, ⥹
+\newcommand{\tightoverset}[2]{%
+  \mathop{#2}\limits^{\vbox to -.5ex{\kern-0.9ex\hbox{$#1$}\vss}}}
+\DeclareDocumentCommand{\latoin}{ O{\prof} O{\alpha} }{[#1 \tightoverset{\in}{⟼} #2]}
+\newcommand{\alllang}{\mathcal{L}}
+\newcommand{\ltru}{\texttt{T}}
+\newcommand{\lfal}{\texttt{F}}
+\newcommand{\laxiom}[1]{{\texgyreherosfamily{\textsc{#1}}}}
+
 %ARG TH
 \newcommand{\AF}{\mathcal{AF}}
 \newcommand{\labelling}{\mathcal{L}}
@@ -60,11 +94,24 @@
 \newcommand{\gextlab}[2][]{
 	\labelling{\mathcal{GE}}_{(#2, \nonemptyor{#1}{\ibeatsr{#2}})}
 }
+\newcommand{\allargs}{A^*}
+\newcommand{\args}{A}
+\newcommand{\ar}{a}
+\newcommand{\ext}{\mathcal{E}}
+
+%MCDA+Arg
+\newcommand{\dm}{d}
+\newcommand{\ileadsto}{\rightcurvedarrow}
+\newcommand{\mleadsto}[1][\eta]{\rightcurvedarrow_{#1}}
+\newcommand{\ibeats}{\vartriangleright}
+\newcommand{\mbeats}[1][\eta]{\vartriangleright_{#1}}
 
 %MISC
-\newcommand{\ibeats}{\vartriangleright}
 \newcommand{\lequiv}{\Vvdash}
 \newcommand{\weightst}{W^{\,t}}
+
+%MCDA classical
+\newcommand{\crits}{\mathcal{J}}
 
 %Sorting
 \newcommand{\cats}{\mathcal{C}}
