@@ -1,0 +1,69 @@
+\newcommand{\commentOC}[1]{{\selectlanguage{french}{\todo{OC : #1}}}}
+%Or: \todo[color=green!40]
+
+%this probably requires outdated float package, see doc KomaScript for an alternative.
+% \newfloat{program}{t}{lop}
+% \floatname{program}{PM}
+
+%style is plain by default (italic text)
+	%\newtheorem{definition}{Definition}
+	%\newtheorem{theorem}{Theorem}
+	%\newtheorem{lemma}{Lemma}
+%\ifdefined\theorem\else
+%\newtheorem{theorem}{\iflanguage{english}{Theorem}{Théorème}}
+%\fi
+
+\theoremstyle{remark}
+%	\newtheorem{examplex}{Example}
+	\newtheorem{remarkx}{Remark}
+
+%trickery allowing use of \qedhere and the like.
+\newenvironment{remark}{
+	\pushQED{\qed}\renewcommand{\qedsymbol}{$\triangle$}\remarkx
+}{
+	\popQED\endremarkx
+}
+
+%which line breaks are chosen: accept worse lines, therefore reducing risk of overfull lines. Default = 200
+\tolerance=2000
+%accept overfull hbox up to...
+\hfuzz=2cm
+%reduces verbosity about the bad line breaks
+\hbadness 5000
+%sloppy sets tolerance to 9999
+\apptocmd{\sloppy}{\hbadness 10000\relax}{}{}
+
+% WRITING
+%\newcommand{\ie}{i.e.\@\xspace}%to try
+%\newcommand{\eg}{e.g.\@\xspace}
+%\newcommand{\etal}{et al.\@\xspace}
+\newcommand{\ie}{i.e.\ }
+\newcommand{\eg}{e.g.\ }
+\newcommand{\mkkOK}{{\color{green}\text{\fontspec{FreeSerif.otf}✓}}}%\checkmark%
+\newcommand{\mkkNONE}{\emptyset}%ding{53}requires pifont?%\color{green}{\checkmark}
+\newcommand{\mkkNO}{{\color{red}\text{\fontspec{FreeSerif.otf}✗}}}
+%\newcommand{\mkkOK}{\checkmark}%\color{green}{\checkmark}
+%\newcommand{\mkkREQ}{\ding{53}}%requires pifont?%\color{green}{\checkmark}
+%\newcommand{\mkkNO}{}%\text{\color{red}{\textsf{X}}}
+
+\makeatletter
+\newcommand{\boldor}[2]{%
+	\ifnum\strcmp{\f@series}{bx}=\z@
+		#1%
+	\else
+		#2%
+	\fi
+}
+\newcommand{\textstyleElProm}[1]{\boldor{\MakeUppercase{#1}}{\textsc{#1}}}
+\makeatother
+\newcommand{\electre}{\textstyleElProm{Électre}\xspace}
+\newcommand{\electreIv}{\textstyleElProm{Électre Iv}\xspace}
+\newcommand{\electreIV}{\textstyleElProm{Électre IV}\xspace}
+\newcommand{\electreIII}{\textstyleElProm{Électre III}\xspace}
+\newcommand{\electreTRI}{\textstyleElProm{Électre Tri}\xspace}
+% \newcommand{\utadis}{\texorpdfstring{\textstyleElProm{utadis}\xspace}{UTADIS}}
+% \newcommand{\utadisI}{\texorpdfstring{\textstyleElProm{utadis i}\xspace}{UTADIS I}}
+
+%TODO
+% \newcommand{\textstyleElProm}[1]{{\rmfamily\textsc{#1}}} 
+

@@ -1,0 +1,460 @@
+%\RequirePackage[l2tabu, orthodox]{nag}%nag complains because beamer titlepage uses a centering environment
+%\WarningFilter{nag}{There is no environment ``centering'' }%this leaves nag complaining about “1 complaints in total”.
+\RequirePackage{silence}
+\WarningFilter{ifpdf}{Someone has redefined \pdfoutput}
+\WarningFilter{fmtcount}{\ordinal already defined use \FCordinal instead}
+\documentclass[english]{beamer}
+\input{preamble/packages}
+\input{preamble/math_basics}
+\input{preamble/math_mine}
+\input{preamble/redac}
+\input{preamble/draw}
+\input{preamble/acronyms}
+\usepackage{calc}
+%\defbeamertemplate*{footline}{default}
+%{}
+
+\title[Eliciting a voting rule]{Eliciting a suitable voting rule via examples}
+\subject{Social choice theory}
+\keywords{preference elicitation, voting rules}
+\author{\emph{Olivier Cailloux} \and Ulle Endriss}
+\institute[ILLC]{Heudiasyc, University of Technology of Compiègne \& ILLC, University of Amsterdam}
+\date{\formatdate{18}{10}{2014}}
+
+\begin{document}
+\bibliographystyle{apalike}
+
+\begin{frame}[plain]
+	\tikz[remember picture,overlay]{
+		\node[anchor=south west, inner sep=0] at (current page.south west) {
+			{\includegraphics[width=1cm]{illc_cropped}}
+		};
+	}
+   \titlepage
+\end{frame}
+
+\section{Context}
+\subsection{Our goal}
+\begin{frame}
+	\frametitle{Introduction}
+	
+	\begin{block}{Context}
+	\begin{itemize}
+		\item A \emph{committee} (a group of decision makers)
+		\begin{itemize}
+			\item a panel attributing a research price
+			\item a management committee
+		\end{itemize}
+		\item Recurring decisions
+		\item A decision is taken using a voting rule
+		\item Voting rule: a systematic way of aggregating different opinions and decide
+	\end{itemize}
+	\end{block}
+	\begin{block}{Our goal}
+		We want to help the committee choose a suitable voting rule.
+	\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Voting rule}
+
+	\begin{block}{Input}
+		\begin{itemize}
+			\item A set of possible alternatives (options) $\allalts$
+			\item Each voter $i \in N$ has a linear order of preference over $\allalts$
+			\item A profile $\prof$ associates each $i$ to such an order.
+		\end{itemize}
+	\end{block}
+	\vfill
+	\begin{minipage}[c]{(\linewidth - 3mm) * \real{0.45}}
+		\vspace{-5mm}
+		\begin{block}{Voting rule}
+			Associates to each profile $\prof$ winning alternatives $A \subseteq \allalts$.
+		\end{block}
+	\end{minipage}\hspace{3mm}%
+	\begin{minipage}[c]{(\linewidth - 3mm) * \real{0.55}}
+		\mbox{}
+		\hfill
+		\begin{tikzpicture}
+			\path node[profile matrix] (profile) {
+				R_1&
+				R_2
+				\\
+				| (profile11) | a&
+				b
+				\\
+				b&
+				a
+				\\
+				c&
+				| (profile32) | c
+				\\
+			};
+			\path ($(profile.south west)!.5!(profile.south east)$) ++ (0, -5mm) node {$\prof$};
+			
+			\path node[draw, rectangle, fit=(profile11) (profile32), outer xsep=2mm, outer ysep=1mm] (justprofile) {};
+			\path (justprofile.east) ++ (2.5cm, 0) node[inner sep=0] (winners) {\mbox{} $\Set{a, b}$};
+			\path[draw, ->] (justprofile.east) to[bend left=35] node[anchor=south] {$f$} (winners.west);
+
+			\path[draw, decorate, decoration={brace, mirror}] (justprofile.south west) -- (justprofile.south east);
+		\end{tikzpicture}
+	\end{minipage}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Our goal}
+	
+	Making decisions involves two steps.
+	\begin{enumerate}
+		\item Establish a constitution: choose a voting rule.
+		\item Solve a decision problem: apply the voting rule.
+	\end{enumerate}
+	
+	\begin{block}{Our goal}
+		We focus on step 1: help the committee choose a voting rule.
+		\begin{itemize}
+			\item Class of functions $\allrules$ (the set of all voting rules)
+			\item Preference elicitation in order to choose a function $f \in \allrules$.
+			\item We want to ask \emph{simple} questions: example-based.
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+\subsection{General approach}
+\begin{frame}[fragile]
+	\frametitle{A naïve attempt}
+	
+	\begin{block}{A first attempt}
+		Simply give a profile $\prof$ and ask for $f(\prof)$. Then iterate.
+	\end{block}
+\vspace{-4mm}
+	\begin{center}
+		\begin{tikzpicture}
+			\path node[profile matrix] (profile) {
+				R_1&
+				R_2
+				\\
+				| (profile11) | a&
+				c
+				\\
+				b&
+				b
+				\\
+				c&
+				| (profile32) | a
+				\\
+			};
+			\path ($(profile.south west)!.5!(profile.south east)$) ++ (0, -5mm) node {$\prof$};
+			
+			\path node[draw, rectangle, fit=(profile11) (profile32), outer xsep=2mm, outer ysep=1mm] (justprofile) {};
+			\path (justprofile.east) ++ (2.5cm, 0) node[inner sep=0] (winners) {\mbox{} $\Set{?}$};
+			\path[draw, ->] (justprofile.east) to[bend left=35] node[anchor=south] {$f$} (winners.west);
+
+			\path[draw, decorate, decoration={brace, mirror}] (justprofile.south west) -- (justprofile.south east);
+		\end{tikzpicture}
+	\end{center}\vspace{-2mm}
+	\begin{itemize}
+		\item Completely general: all functions in $\allrules$ can be reached.
+	\end{itemize}
+	\emph{But…} 
+	\begin{itemize}
+		\item One question brings very little information.
+		\item Questions may be difficult to answer.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{General idea}
+	
+	\begin{itemize}
+		\item Ask \emph{good} (informative, example-based) questions.
+		\item Restrict the class of a-priori acceptable functions to $\allrules' \subset \allrules$.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Outline}
+	\tableofcontents[hideallsubsections]
+\end{frame}
+
+\AtBeginSection{
+	\begin{frame}
+		\frametitle{Outline}
+		\tableofcontents[currentsection, hideallsubsections]
+	\end{frame}
+}
+
+\section{Asking good questions}
+\begin{frame}[fragile]
+	\frametitle{A different view of a profile}
+	
+	\begin{itemize}
+		\item We want to ask more informative questions about $f$.
+		\item We look at profiles under a different angle.
+		\item A \emph{rank-vector} maps voters to ranks, $x: N \rightarrow [1, m]$.
+		\item All rank vectors: $\rvspace$.
+	\end{itemize}
+	
+	\begin{center}
+	\begin{tikzpicture}
+			\path node[profile matrix] (profile) {
+				R_1&
+				R_2
+				\\
+				| (profile11) | a&
+				a
+				\\
+				b&
+				c
+				\\
+				c&
+				| (profile32) | b
+				\\
+			};
+		\path[draw, decorate, decoration={brace, mirror}] (profile.south west) -- (profile.south east);
+		\path ($(profile.south west)!.5!(profile.south east)$) ++ (0, -5mm) node {$\prof$};
+		
+		\path (profile.north east) ++ (1.5cm, 0) node[rank-profile matrix, anchor=north west] (rank-profile) {
+			&
+			| (header start) | 1&
+			| (header end) | 2
+			\\
+			| (alts start) | a&
+			| (rv1 start) | 1&
+			| (rv1 end) | 1
+			\\
+			b&
+			| (rv2 start) | 2&
+			| (rv2 end) | 3
+			\\
+			| (alts end) | c&
+			| (rv3 start) | 3&
+			| (rv3 end) | 2
+			\\
+		};
+		\path node[draw, ellipse, dotted, inner sep=0, fit=(header start.north west) (header end.south east)] (N) {};
+		\path (N.north) node[anchor=south, inner sep=1mm] {$N$};
+		\path node[draw, ellipse, dotted, inner sep=0, fit=(alts start.north west) (alts end.south east)] (A) {};
+		\path (A.west) node[anchor=east, inner sep=1mm] {$\allalts$};
+		\foreach \i/\a in {1/a, 2/b, 3/c} {
+			\path node[rank-vector, fit=(rv\i\space start.north west) (rv\i\space end.south east)] (rv\i) {};
+			\path[<-, draw] (rv\i.east) -- ++(0.3cm, 0) node[anchor=west] {$\rprof_{\prof}(\a) \in [1, m]^N$};
+		}
+		\path[draw, decorate, decoration={brace, mirror, raise=2mm}] (rank-profile.south west) -- (rank-profile.south east);
+		\path ($(rank-profile.south west)!.5!(rank-profile.south east)$) ++ (0, -7mm) node {$\rprof_{\prof}$};
+	\end{tikzpicture}
+	\end{center}
+
+	To each profile $\prof$ corresponds a \emph{rank-profile} $\rprof_\prof$.
+\end{frame}
+
+\subsection{Using a weak-order}
+\begin{frame}[fragile]
+	\frametitle{Representing the preferences of the committee}
+	
+	\begin{itemize}
+		\item We can now ask for the preference status of, e.g.,\\ \isolatedrankvector{1}{3} versus \isolatedrankvector{2}{2}.
+		\item Series of such questions permit to identify a voting rule.
+	\end{itemize}
+	
+	\begin{definition}[Weak-order based rules]
+		\begin{itemize}
+			\item $\pglobeq$ a weak-order (transitive, reflexive, connected) over $\rvspace$.
+			\item Having a profile $\prof$, look at the maximal rank-vectors in it according to $\pglobeq$.
+			\item The rule $f_\pglobeq$, at $\prof$, selects those alternatives having maximal rank-vectors in $\prof$.
+		\end{itemize}
+		A rule $f$ is \emph{weak-order based} if there exists $\pglobeq$ st $f = f_\pglobeq$.
+	\end{definition}
+\end{frame}
+%TODO include an example with layers of rvs to describe the weak-order, and the profile involving 13 and 22, and show who wins.
+
+\subsection{Using preorders}
+\begin{frame}
+	\frametitle{Incomplete question sets}
+	
+	\begin{itemize}
+		\item We do not want to ask every possible questions!
+		\item Can we get away with only \emph{some} answers?
+	\end{itemize}
+	\begin{definition}[Robust rules]
+		\begin{itemize}
+			\item $\ppglobeq$ a \emph{preorder} (transitive, reflexive) over $\rvspace$.
+			\item Look at all weak-orders $\pglobeq$ extending $\ppglobeq$.
+			\item The \emph{robust} rule $F_\ppglobeq$, at $\prof$, selects those alternatives winning in \emph{some} $f_\pglobeq$ (for some $\pglobeq$ extension of $\ppglobeq$).
+		\end{itemize}
+		A rule $f$ is \emph{robust} if there exists $\ppglobeq$ st $f = F_\ppglobeq$.
+	\end{definition}
+\end{frame}
+
+\section{Restrict the class of functions}
+\subsection{WOB rules}
+\begin{frame}
+	\frametitle{The WOB class}
+	
+	Not every rule is weak-order based.
+	\begin{itemize}
+		\item Bad news: we are not fully general any more.
+		\item Good news: we have restricted our class of functions. $WOB = \Set{f_\pglobeq, \pglobeq \text{ a weak-order over } \rvspace}$ instead of $\allrules$.
+	\end{itemize}
+	How does WOB compare to other known classes of rules?
+	\begin{itemize}
+		\item Every scoring rule (e.g. Borda) is a WOB rule.
+		\item Some WOB rules are not scoring rules. E.g. Bucklin.
+		\item Many Condorcet rules are not WOB rules.
+	\end{itemize}
+	\begin{block}{Some relationships between classes of rules}
+		Scoring $\subset$ WOB; Condorcet $\cap$ WOB $= \emptyset$ (for $n = 3k, m ≥ 4$).
+	\end{block}
+ \end{frame}
+
+\subsection{Robust rules}
+\begin{frame}[fragile]
+	\frametitle{The class of robust rules}
+	
+	Some robust rules are not WOB rules.
+	\begin{example}[A robust rule]
+		\begin{minipage}{0.45\columnwidth}
+			\centering
+			${\ppglobeq} = {}$\fbox{%
+				\begin{tikzpicture}[baseline=(current bounding box)]
+\setlength{\GraphsNodeSep}{11mm}
+					\path node[isolated rank-vector, matrix anchor=east, outer sep=0, inner sep=0] (13) {1\&3\\};
+					\path (13.south) ++(0, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north] (41) {4\&1\\};
+					\path (41.south) ++(-8mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north, inner sep=0] (14) {1\&4\\};
+					\path (41.south) ++(8mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north, inner sep=0] (33) {3\&3\\};
+					\path (33.east) ++(4mm, 0) node[isolated rank-vector, matrix anchor=west, inner sep=0] (34) {3\&4\\};
+					\path ($(13 -| 34)!.5!(41 -| 34)$) node[isolated rank-vector, matrix anchor=center, inner sep=0] (22) {2\&2\\};
+					\path[->, draw] (13) -- (41);
+					\path[->, draw] (41) -- (14);
+					\path[->, draw] (41) -- (33);
+		%			\path[->, draw] (41) -- (34);
+					\path[->, draw] (22) -- (34);
+				\end{tikzpicture}%
+			}
+		\end{minipage}%
+		\begin{minipage}{0.55\columnwidth}
+			\centering
+			$\begin{array}{lcl@{\hspace*{5mm}}cl}
+				& \multicolumn{2}{c}{\hspace*{3mm}\prof_1\hspace{3mm}F_\ppglobeq(\prof_1)}	& \multicolumn{2}{c}{\hspace*{2mm}\prof_2\hspace{3mm}F_\ppglobeq(\prof_2)}\\
+				\cmidrule(r{2mm}){2-3}\cmidrule{4-5}
+%		\begin{tikzpicture}[baseline]
+%			\path node[draw, inner ysep=1cm, outer sep=0, anchor=base] (first) {1};
+%			\path (current bounding box.south west) ++(0, -1cm);
+%		\end{tikzpicture}%
+				a &\isolatedrankvectorinarray{1}{3}
+ & \mkkOK & \isolatedrankvectorinarray{1}{4} &\\
+				b &\isolatedrankvectorinarray{2}{2} & \mkkOK & \isolatedrankvectorinarray{2}{2} & \mkkOK\\
+				c &\isolatedrankvectorinarray{3}{4} & & \isolatedrankvectorinarray{3}{3} & \\
+				d &\isolatedrankvectorinarray{4}{1} & & \isolatedrankvectorinarray{4}{1} & \mkkOK\\
+			\end{array}$
+		\end{minipage}
+	\end{example}
+	
+	\begin{block}{Some relationships between classes of rules}
+		Scoring $\subset$ WOB $\subset$ Robust.
+	\end{block}
+\end{frame}
+
+\section{Which questions to ask?}
+\begin{frame}
+	\frametitle{Which questions to ask?}
+	
+	\begin{itemize}
+		\item Assume the committee has a weak-order $\pglobeq$ in mind.
+		\item We want to discover much information using few questions.
+		\item Different questions bring different amount of information.
+	\end{itemize}
+	\begin{definition}[Elicitation strategy]
+		An elicitation strategy tells us which question should be asked considering our current knowledge.
+	\end{definition}
+	A strategy:
+	\begin{enumerate}
+		\item computes the fitness of asking about a pair of rank-vectors, for each pair;
+		\item chooses the fittest pair.
+	\end{enumerate}
+	We ask $q$ questions, then compare our approximation $F_\ppglobeq$ to $f_\pglobeq$.
+\end{frame}
+
+\subsection{Comparing strategies}
+\begin{frame}
+	\frametitle{Which strategy?}
+	
+	We tested three strategies.
+	\begin{description}
+		\item[optimistic] fitness of ($x, y$) proportional to the number of rank-vectors dominated by $x$ or $y$, but not both;
+		\item[pessimistic] a variant of the previous strategy, using the min operator rather than the sum;
+		\item[likelihood] fitness proportional to the likelihood of a profile occurring where both rank-vectors are possible winners.% (depends on the probability distribution over profiles, we assumed impartial culture)
+	\end{description}
+	We assume pareto-dominance and indifference to permutations.
+	\begin{block}{Comparison of strategies}
+		\begin{itemize}
+			\item Optimistic not better than random!
+			\item Likelihood much better than pessimistic.
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+\subsection{Number of questions}
+\begin{frame}
+	\frametitle{Number of questions}
+	
+	How many questions must be asked for a useful approximation?
+	\begin{itemize}
+		\item Our approximation has all the true winners: $f_\pglobeq(\prof) \subseteq F_\ppglobeq(\prof)$.
+		\item But it may have supplementary winners.
+		\item We are interested in the ratio of approximated VS true winners: $\frac{\card{F_\ppglobeq(\prof)}}{\card{f_\pglobeq(\prof)}}$.
+		\item We average it over all profiles: $\frac{1}{\card{\profiles}} \sum_{\prof \in \profiles} \frac{\card{F_\ppglobeq(\prof)}}{\card{f_\pglobeq(\prof)}}$.
+	\end{itemize}
+	
+	For $6$ voters, $6$ alternatives, using the likelihood strategy:
+	\begin{center}
+		\begin{tabular}{rrr}
+			\toprule
+			 & \multicolumn{2}{c}{Target rule}\\
+			nb q & Borda & Random $\pglobeq$\\
+			\midrule
+			0 & 1.9 & 2.2\\
+			25 & 1.3 & 1.7\\
+			99 & 1.0 & 1.3\\
+			\bottomrule
+		\end{tabular}
+	\end{center}
+\end{frame}
+
+\section{Conclusion}
+\begin{frame}
+	\frametitle{Conclusion}
+	
+	We propose to help a committee choose a voting rule.
+	\begin{itemize}
+		\item We introduce a different look at a profile \citep[see also][]{sen_weights_1977}.
+		\item We use it to ask simple questions to elicit preferences.
+		\item We analyse the class of rules reachable by our questioning process.
+		\item A robust voting rule may be defined to give all possible winners \citep[inspired by][]{dias_aggregation/disaggregation_2002}.
+		\item We compare and analyse several elicitation strategies.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]
+	\addtocounter{framenumber}{-1}
+	\begin{center}
+		\huge
+		\textit{Thank you for your attention!}
+	\end{center}
+	\tikz[remember picture,overlay]
+	\node[anchor=south west, inner sep=0] at (current page.south west) {
+		{\includegraphics[width=1cm]{illc_cropped}}
+	};
+\end{frame}
+
+\appendix
+\AtBeginSection{
+}
+
+\begin{frame}%[allowframebreaks]
+	\frametitle{Bibliography}
+	\def\newblock{\hskip .11em plus .33em minus .07em}
+ 	\bibliography{zotero}
+\end{frame}
+
+\end{document}

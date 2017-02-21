@@ -1,0 +1,81 @@
+\newcommand{\allalts}{\mathcal{A}}
+\newcommand{\alts}{A}
+\newcommand{\linors}{\mathcal{L}(\alts)} % UE: changed
+\newcommand{\allrules}{\mathcal{F}}
+
+%the set of all profiles
+\newcommand{\profiles}{\mathbfcal{R}}
+\newcommand{\prof}{\mathbf{R}}
+%a rank-profile
+\newcommand{\rprof}{\mathbf{x}}
+% \newcommand{\rprof}{\text{\boldmath $x$}
+\newcommand{\rankprofilesrvs}{\mathcal{X}}
+
+% constraints over ranks
+\newcommand{\prrefceq}{≥^C}
+\newcommand{\prrefc}{>^C}
+\newcommand{\prrefcsim}{\sim^C}
+
+\newcommand{\wos}{\mathcal{W}}
+\newcommand{\prs}{\mathcal{Z}}
+%preorder induced by consistent C
+\newcommand{\prCeq}{\ppglobeq^C}%\framebox{C}
+\newcommand{\prC}{\ppglob^C}
+\newcommand{\halfvoters}{\frac{n}{2}}
+% dominates strictly
+% \newcommand{\doms}{\RHD}
+\newcommand{\doms}{\mathrel{\blacktriangleright}}
+% \newcommand{\rvspace}{\mathbb{X}}
+\newcommand{\rvspace}{\left[1, m\right]^N}
+\newcommand{\cspace}{\mathcal{C}}
+% pref over ranks (individually)
+\newcommand{\prrefeq}{\succcurlyeq}
+\newcommand{\prreff}{\succ}
+% global weak-order over ranks
+\newcommand{\pglobeq}{⪰}
+%that’s not really what I want, but \not\succsim crashes xelatex
+\def\not\pglobeq{\nsucceq}
+%\newcommand{\pglob}{⪲}
+\newcommand{\pglob}{⪲}
+% global (partial) preorder over ranks
+\newcommand{\ppglobeq}{\succsim}
+\newcommand{\ppglobsim}{\sim}
+\newcommand{\ppglob}{\succnsim}
+%\newcommand{\ppglob}{\succ}
+% \def\not\ppglobeq{\nsucceq}
+%U+22E1
+% \def\not\ppglobeq{⋡}
+%U+2275
+\def\not\ppglobeq{≵}
+
+\newcommand{\Vpr}{V^{\,\prime}}
+
+%ARG TH
+\newcommand{\AF}{\mathcal{AF}}
+\newcommand{\labelling}{\mathcal{L}}
+\newcommand{\labin}{\textbf{in}\xspace}
+\newcommand{\labout}{\textbf{out}}
+\newcommand{\labund}{\textbf{undec}\xspace}
+\newcommand{\nonemptyor}[2]{\ifthenelse{\equal{#1}{}}{#2}{#1}}
+\newcommand{\gextlab}[2][]{
+	\labelling{\mathcal{GE}}_{(#2, \nonemptyor{#1}{\ibeatsr{#2}})}
+}
+
+%MISC
+\newcommand{\ibeats}{\vartriangleright}
+\newcommand{\lequiv}{\Vvdash}
+\newcommand{\weightst}{W^{\,t}}
+
+%Sorting
+\newcommand{\cats}{\mathcal{C}}
+\newcommand{\catssubsets}{2^\cats}
+\newcommand{\catgg}{\vartriangleright}
+\newcommand{\catll}{\vartriangleleft}
+\newcommand{\catleq}{\trianglelefteq}
+\newcommand{\catgeq}{\trianglerighteq}
+\newcommand{\alttoc}[2][x]{(#1 \xrightarrow{} #2)}
+\newcommand{\alttocat}[3]{(#2 \xrightarrow{#1} #3)}
+\newcommand{\alttoI}{(x \xrightarrow{} \left[\underline{C_x}, \overline{C_x}\right])}
+\newcommand{\alttocatdm}[3][t]{\left(#2 \thinspace \raisebox{-3pt}{$\xrightarrow{#1}$}\thinspace #3\right)}
+\newcommand{\alttocatatleast}[2]{\left(#1 \thinspace \raisebox{-3pt}{$\xrightarrow[]{≥}$}\thinspace #2\right)}
+\newcommand{\alttocatatmost}[2]{\left(#1 \thinspace \raisebox{-3pt}{$\xrightarrow[]{≤}$}\thinspace #2\right)}
