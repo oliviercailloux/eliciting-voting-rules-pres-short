@@ -19,7 +19,7 @@
 \setbeamercolor{first part in head/foot}{use=palette primary, fg=palette primary.fg, bg=palette primary.bg}
 \setbeamercolor{second part in head/foot}{use=palette quaternary, fg=palette quaternary.fg, bg=palette quaternary.bg}
 
-\hypersetup{colorlinks=true, linkcolor=blue!70!red, urlcolor=blue}
+\hypersetup{colorlinks=false, linkcolor=blue!70!red, urlcolor=blue}
 
 \defbeamertemplate{headline}{singleline}{%
 \hypersetup{linkcolor=.}%
@@ -59,7 +59,16 @@
 \defbeamertemplate{footline}{onlypage}{%
 	\leavevmode%
 	\hfill
-	\begin{beamercolorbox}[wd=.1\paperwidth,ht=2.25ex,dp=1ex,right]{page number in head/foot}%
+	\usebeamerfont*{page number in head/foot}
+	\usebeamercolor*[fg]{page number in head/foot}
+%	\begin{beamercolorbox}[wd=.1\paperwidth,ht=2.25ex,dp=1ex,right]{page number in head/foot}%
+		\insertframenumber{} / \inserttotalframenumber\hspace*{2ex}%
+%	\end{beamercolorbox}%
+}
+
+\defbeamertemplate{footline}{pagebox}{%
+	\leavevmode%
+	\begin{beamercolorbox}[wd=\paperwidth,ht=2.25ex,dp=1ex,right]{page number in head/foot}%
 		\insertframenumber{} / \inserttotalframenumber\hspace*{2ex}%
 	\end{beamercolorbox}%
 }
@@ -114,8 +123,13 @@
 
 \setbeamercolor{definition text}{parent=normal text, fg=red!80!black, bg=red}
 \BeforeBeginEnvironment{definition}{%
-%    \setbeamercolor{block title}{fg=black,bg=pink!50!white}
-%    \setbeamercolor{block body}{fg=pink, bg=pink!30!white}
+	\setbeamertemplate{theorem begin}{%
+		\begin{\inserttheoremblockenv}{%
+			\ifx\inserttheoremaddition\@empty\else\inserttheoremaddition\fi%
+		}%
+	}
+%	\setbeamercolor{block title}{fg=black,bg=pink!50!white}
+%	\setbeamercolor{block body}{fg=pink, bg=pink!30!white}
 	\setbeamercolor{block title}{use=definition text, fg=definition text.fg, bg=definition text.fg!20!bg}
 	\setbeamercolor{block body}{parent=normal text, use=block title, bg=block title.bg!50!bg}
 }
@@ -123,6 +137,7 @@
  \setbeamercolor{block title}{use=structure,fg=structure.fg,bg=structure.fg!20!bg}
  \setbeamercolor{block body}{parent=normal text, use=structure, bg=structure.fg!10!bg}
 }
+
 
 \mode<all>
 

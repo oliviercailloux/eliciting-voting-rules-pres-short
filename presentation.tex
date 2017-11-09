@@ -1,8 +1,9 @@
 %\RequirePackage[l2tabu, orthodox]{nag}%nag complains because beamer titlepage uses a centering environment
 %\WarningFilter{nag}{There is no environment ``centering'' }%this leaves nag complaining about “1 complaints in total”.
+\RequirePackage[l2tabu, orthodox]{nag}
 \RequirePackage{silence}
-\WarningFilter{ifpdf}{Someone has redefined \pdfoutput}
-\WarningFilter{fmtcount}{\ordinal already defined use \FCordinal instead}
+%\WarningFilter{ifpdf}{Someone has redefined \pdfoutput}
+%\WarningFilter{fmtcount}{\ordinal already defined use \FCordinal instead}
 \documentclass[english]{beamer}
 \input{preamble/packages}
 \input{preamble/math_basics}
@@ -17,20 +18,26 @@
 \title[Eliciting a voting rule]{Eliciting a suitable voting rule via examples}
 \subject{Social choice theory}
 \keywords{preference elicitation, voting rules}
-\author{\emph{Olivier Cailloux} \and Ulle Endriss}
-\institute[ILLC]{Heudiasyc, University of Technology of Compiègne \& ILLC, University of Amsterdam}
-\date{\formatdate{18}{10}{2014}}
+\author[Olivier Cailloux]{\emph{Olivier Cailloux}\inst{1} \and Ulle Endriss\inst{2}}
+\institute[LAMSADE]{\inst{1} LAMSADE, Université Paris-Dauphine \and \inst{2} ILLC, University of Amsterdam}
+\date{\formatdate{14}{11}{2017}}
 
 \begin{document}
 \bibliographystyle{apalike}
 
 \begin{frame}[plain]
 	\tikz[remember picture,overlay]{
-		\node[anchor=south west, inner sep=0] at (current page.south west) {
-			{\includegraphics[width=1cm]{illc_cropped}}
+		\path (current page.south west) node[anchor=south west, inner sep=0] {
+			\includegraphics[height=1cm]{LAMSADE95.jpg}
+		};
+		\path (current page.south east) node[anchor=south east, inner sep=0] {
+			\includegraphics[height=1cm]{illc_cropped}
+		};
+		\path (current page.south) ++ (0, 4em) node[anchor=south, inner sep=0] {
+			\scriptsize\url{https://github.com/oliviercailloux/eliciting-voting-rules-pres-short}
 		};
 	}
-   \titlepage
+	\titlepage
 \end{frame}
 
 \section{Context}
