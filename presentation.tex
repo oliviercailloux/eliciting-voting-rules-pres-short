@@ -1,9 +1,5 @@
-%\RequirePackage[l2tabu, orthodox]{nag}%nag complains because beamer titlepage uses a centering environment
-%\WarningFilter{nag}{There is no environment ``centering'' }%this leaves nag complaining about “1 complaints in total”.
 \RequirePackage[l2tabu, orthodox]{nag}
 \RequirePackage{silence}
-%\WarningFilter{ifpdf}{Someone has redefined \pdfoutput}
-%\WarningFilter{fmtcount}{\ordinal already defined use \FCordinal instead}
 \documentclass[english]{beamer}
 \input{preamble/packages}
 \input{preamble/math_basics}
@@ -11,9 +7,6 @@
 \input{preamble/redac}
 \input{preamble/draw}
 \input{preamble/acronyms}
-\usepackage{calc}
-%\defbeamertemplate*{footline}{default}
-%{}
 
 \title[Eliciting a voting rule]{Eliciting a suitable voting rule via examples}
 \subject{Social choice theory}
@@ -324,7 +317,7 @@
 			\centering
 			${\ppglobeq} = {}$\fbox{%
 				\begin{tikzpicture}[baseline=(current bounding box)]
-\setlength{\GraphsNodeSep}{11mm}
+\setlength{\GraphsNodeSep}{10mm}
 					\path node[isolated rank-vector, matrix anchor=east, outer sep=0, inner sep=0] (13) {1\&3\\};
 					\path (13.south) ++(0, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north] (41) {4\&1\\};
 					\path (41.south) ++(-8mm, -1\GraphsNodeSep) node[isolated rank-vector, matrix anchor=north, inner sep=0] (14) {1\&4\\};
