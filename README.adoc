@@ -1,5 +1,6 @@
-= Eliciting a Suitable Voting Rule via Examples: A long presentation
+= Eliciting a Suitable Voting Rule via Examples: A short presentation
 
-A long (50 min) presentation of this http://www.lamsade.dauphine.fr/~ocailloux/#publications[article]: Cailloux, Olivier and Ulle Endriss. 2014. “Eliciting a Suitable Voting Rule via Examples”. In Proceedings of the 21st European Conference on Artificial Intelligence (ECAI 2014). http://doi.org/10.3233/978-1-61499-419-0-183[doi].
+A long (20 min) presentation of this http://www.lamsade.dauphine.fr/~ocailloux/#publications[article]: Cailloux, Olivier and Ulle Endriss. 2014. “Eliciting a Suitable Voting Rule via Examples”. In Proceedings of the 21st European Conference on Artificial Intelligence (ECAI 2014). http://doi.org/10.3233/978-1-61499-419-0-183[doi].
 
+See also this https://github.com/oliviercailloux/eliciting-voting-rules-pres-long[long] presentation.
 
